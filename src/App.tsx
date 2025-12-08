@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import './App.css';
 import { Board } from './components/Board';
 import { Sidebar } from './components/Sidebar';
 import { useGameState } from './hooks/useGameState';
-import type { BoardState } from './types/game';
 
 function App() {
   const { gameState, handleTileClick, movePiece, setAILevel, restartGame, toastMessage } = useGameState();

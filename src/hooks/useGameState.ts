@@ -68,7 +68,7 @@ export const useGameState = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Track the toast timeout so we can clean it up properly
-  const toastTimeoutRef = useRef<NodeJS.Timeout>();
+  const toastTimeoutRef = useRef<number | undefined>(undefined);
 
   const { getBestMove } = useAI();
 
