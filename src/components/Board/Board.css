@@ -35,9 +35,11 @@
 }
 
 .board-square.dark {
-  background-color: #3b82f6;
+  background-color: var(--text-blue);
   /* blue squares */
 }
+
+v
 
 /* Prevent any hover effects on non-interactive squares */
 .board-square.dark:not(.valid-move):not(.hover-valid-move) {

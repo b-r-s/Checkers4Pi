@@ -44,14 +44,19 @@ export function Sidebar({
     const score = scores[player];
     const playerTotalTime = totalTime[player];
     const moveTime = isActive ? currentMoveTime : 0;
-    const colorClass = player === 'red' ? 'text-red' : 'text-blue';
+    const colorClass = player === 'red' ? 'text-red' : 'text-black';
+    const isAI = player === 'black' ? true : false;
 
     return (
       <div className={`player-score-card ${isActive ? 'active' : ''}`}>
         <div className="card-header">
           <span className="player-name">
-            <span className="player-emoji">{emoji}</span>
+            <span className="player-emoji">{emoji}
+
+            </span>
             <span className={colorClass}>{label}</span>
+            {isAI && <span className="opacity-50 al-level"> {aiLevel} Level</span >}
+
             {isActive && <span className="animate-pulse">⏱️</span>}
           </span>
           <span className="player-total-score">
@@ -101,6 +106,7 @@ export function Sidebar({
             <div className="match-stats-container">
               {renderPlayerScore('red', 'Red (You)', '🔴')}
               {renderPlayerScore('black', 'Black (AI)', '⚫')}
+
             </div>
           </>
         ) : (

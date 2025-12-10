@@ -46,9 +46,9 @@
 .sidebar-tab.active {
   background: rgba(59, 130, 246, 0.15);
   /* Light blue tint background */
-  color: #3b82f6;
+  color: var(--text-blue);
   /* checkerboard blue text */
-  box-shadow: 0 0 0 1px #3b82f6;
+  box-shadow: 0 0 0 1px var(--text-blue);
   /* border effect */
 }
 
@@ -72,7 +72,7 @@
 .sidebar-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--text-blue);
   margin-bottom: 0.75rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -125,6 +125,12 @@
   margin-bottom: 0.4rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.al-level {
+  font-size: 0.65rem;
+  color: var(--text-blue);
+  font-style: uppercase;
 }
 
 .timer-row {
