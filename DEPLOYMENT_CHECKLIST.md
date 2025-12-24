@@ -10,29 +10,198 @@
 - Keep `sandbox: true` for TestNet testing
 - Change to `sandbox: false` ONLY when moving to MainNet
 
-### 2. Environment Variables
+### 2. Environment Variables - Complete Guide
 **Status:** ⚠️ PARTIALLY DONE  
-**Current State:**
-- ✅ `PI_API_KEY` is set
-- ❌ `PI_APP_ID` needs to be updated from "your_app_id_here"
 
-**Action:**
-1. Go to [Pi Developer Portal](https://developers.minepi.com/)
-2. Create or access your app
-3. Copy your actual `PI_APP_ID`
-4. Update `.env` file
+#### Understanding Your .env File
 
-### 3. Production API URL
-**Status:** ⚠️ TO DO  
-**Location:** `src/hooks/piNetworkCallbacks.ts` (Line 6)  
-**Current:** Defaults to `http://localhost:3000/api`
+Your `.env` file contains configuration that changes between development and production. Here's what each variable does:
 
-**Action:**
-1. Get your production server URL from your friend
-2. Create a `.env` file with:
-   ```
-   VITE_API_BASE_URL=https://your-server-domain.com/api
-   ```
+**Current .env Structure:**
+```dotenv
+PI_API_KEY=c7lzy1y5uoeol9rfmpnao!
+PI_APP_ID=your_app_id_here
+NODE_ENV=development
+PORT=3000
+```
+
+#### Environment Variables Explained:
+
+**1. PI_API_KEY** ✅ (You have this)
+- **What it is:** Secret key to authenticate your backend server with Pi Network API
+- **Used by:** Backend server only (never exposed to browser)
+- **Where to get it:** Pi Developer Portal (https://developers.minepi.com/)
+- **Security:** Keep secret, never commit to public repos
+- **Status:** Already configured ✅
+
+**2. PI_APP_ID** ⚠️ (Needs updating)
+- **What it is:** Unique identifier for your app in Pi Network
+- **Used by:** Backend server for Pi Network integration
+- **Where to get it:** Pi Developer Portal after registering your app
+- **Action needed:** Replace "your_app_id_here" with actual App ID from portal
+- **When to update:** Before deploying to TestNet
+
+**3. NODE_ENV** ⚠️ (Change for production)
+- **What it is:** Tells your app whether it's in development or production mode
+- **Current value:** `development`
+- **When to change:** 
+  - Keep as `development` for local testing
+  - Change to `production` when deploying to friend's server
+- **What it affects:**
+  - Server logging behavior
+  - Error message verbosity
+  - Static file serving
+  - Performance optimizations
+
+**4. PORT** ✅ (You have this)
+- **What it is:** The port your server runs on
+- **Current value:** `3000`
+- **When to change:** Only if port 3000 is already in use on server
+- **Status:** Default is fine ✅
+
+**5. VITE_API_BASE_URL** ⚠️ (Should be added)
+- **What it is:** Tells your frontend where to send API requests
+- **Used by:** Frontend code (the `VITE_` prefix makes it available to browser)
+- **Important:** This is NOT a Vite API key - it's just a configuration variable
+- **Current default:** `http://localhost:3000/api` (hardcoded in piNetworkCallbacks.ts)
+- **For local development:**
+  ```
+  VITE_API_BASE_URL=http://localhost:3000/api
+  ```
+- **For production:**
+  ```
+  VITE_API_BASE_URL=https://your-server-domain.com/api
+  ```
+
+#### Complete .env Examples:
+
+**For TestNet to MainNet Migration Guide
+
+### Overview: The Two-Stage Process
+
+Pi Network uses a two-stage approval process:
+
+**Stage 1: TestNet (Sandbox Mode)**
+- Your app runs with `sandbox: true`
+- Uses Pi Testnet blockchain
+- No real Pi currency involved
+- For testing and validation
+- Review and approval by Pi team
+- Can have multiple iterations/fixes
+
+**Stage 2: MainNet (Production)**
+- Your app runs with `sandbox: false`
+- Uses real Pi blockchain
+- Real Pi currency transactions
+- Requires separate MainNet approval
+- Higher security standards
+
+### 📋 TestNet Deployment Checklist
+
+**Environment Configuration:**
+- [ ] `NODE_ENV=production` in `.env`
+- [ ] `sandbox: true` in `src/hooks/usePiNetwork.ts` (keep this!)
+- [ ] `PI_APP_ID` set to your TestNet App ID
+- [ ] `VITE_API_BASE_URL` points to your server
+- [ ] HTTPS enabled on your server (recommended but may not be strict requirement)
+
+**What "Production" NODE_ENV Means:**
+- Your app is running on a production server (not localhost)
+- Optimized build and performance
+- Production logging behavior
+- Does NOT mean MainNet - you're still on TestNet!
+
+**Why Keep sandbox: true:**
+- TestNet apps MUST use sandbox mode
+- Allows Pi team to test without real currency
+- Transactions use test Pi, not real Pi
+- Can be reset/tested multiple times
+
+### 🔄 Moving from TestNet to MainNet
+
+After TestNet approval, you'll need to make these changes:
+
+#### 1. Code Changes
+**File:** `src/hooks/usePiNetwork.ts` (Line 83)
+```typescript
+// Change from:
+sandbox: true,
+
+// To:
+sandbox: false,
+```
+
+**File:** `server/index.js` (Line 14)
+```javascript
+// Change from:
+app.use(cors());
+
+// To:
+app.use(cors({ 
+  origin: 'https://your-actual-domain.com',
+  credentials: true 
+}));
+```
+
+#### 2. Environment Variables
+**Update your `.env` file:**
+```dotenv
+PI_API_KEY=your_mainnet_api_key
+PI_APP_ID=your_mainnet_app_id
+NODE_ENV=production
+PORT=3000
+VITE_API_BASE_URL=https://your-server-domain.com/api
+```
+
+**Important Notes:**
+- You may get a NEW App ID for MainNet (check Pi Portal)
+- API keys might be different for MainNet
+- Verify all credentials in Pi Developer Portal
+
+#### 3. Infrastructure Requirements
+- [ ] **HTTPS is REQUIRED** for MainNet (not optional)
+- [ ] Valid SSL certificate (Let's Encrypt is fine)
+- [ ] Stable server with good uptime
+- [ ] Database for payment logging (highly recommended)
+- [ ] Rate limiting to prevent abuse
+- [ ] Proper error handling and monitoring
+
+#### 4. Security Hardening
+- [ ] Restrict CORS to your domain only
+- [ ] Add request validation and sanitization
+- [ ] Implement proper authentication checks
+- [ ] Set up payment logging/audit trail
+- [ ] Add server monitoring and alerts
+- [ ] Review all payment flows thoroughly
+- [ ] Test extensively before MainNet launch
+
+#### 5. Rebuild and Deploy
+```bash
+# After making all changes:
+npm run build
+# Upload new build to server
+# Restart server
+pm2 restart checkers4pi
+```
+
+### ⚠️ Critical Differences: TestNet vs MainNet
+
+| Feature | TestNet (Sandbox) | MainNet (Production) |
+|---------|-------------------|---------------------|
+| sandbox setting | `true` | `false` |
+| NODE_ENV | `production` | `production` |
+| HTTPS Required | Recommended | **REQUIRED** |
+| Blockchain | Pi Testnet | Pi Mainnet |
+| Currency | Test Pi (fake) | Real Pi |
+| Reversible | Yes | No |
+| App ID | TestNet ID | MainNet ID (may differ) |
+| Security Level | Standard | **Very High** |
+| Payment Logging | Optional | **Highly Recommended** |
+| Error Tolerance | More lenient | Very strict |
+- [ ] Update PI_APP_ID in .env file
+- [ ] Add VITE_API_BASE_URL to .env file
+- [ ] Change NODE_ENV to "production" when deploying to server
+- [ ] Rebuild app after changing environment variables: `npm run build`
 
 ---
 
@@ -98,26 +267,274 @@
 
 ---
 
-## 📱 Pi Network Submission Requirements
+## 📱 Pi Network Submission & Review Process
 
-### What You Need:
-- [ ] App URL (your friend's server URL)
-- [ ] Screenshots of your game (recommended 3-5 screenshots):
-  - Game board/main screen
-  - Gameplay in progress
-  - Any unique features
-  - Game over/results screen
-  
-- [ ] App Description (prepare in advance):
-  - Clear description of what the game does
-  - How to play
-  - Any unique features
+### Step-by-Step Submission Guide
 
-- [ ] App Icon (square, PNG, recommended 512x512px)
+#### 1. Pre-Submission Preparation
+- [ ] App is deployed and accessible at a public URL
+- [ ] Pi authentication works in Pi Browser
+- [ ] All game features tested and working
+- [ ] Screenshots taken (3-5 high-quality images)
+- [ ] App icon created (512x512px PNG)
+- [ ] Description written (use GAME_DESCRIPTION.md)
+- [ ] Environment variables configured correctly
+- [ ] `PI_APP_ID` obtained and set
 
-### Submit Through:
-- Pi Developer Portal: https://developers.minepi.com/
-- Your app dashboard
+#### 2. Submit Through Pi Developer Portal
+
+**Portal URL:** https://developers.minepi.com/
+
+**What You'll Do:**
+1. Log in with your Pi account
+2. Navigate to "My Apps" or "Create App" 
+3. Click "Submit App" or "New App"
+4. Fill out the submission form:
+   - **App Name:** Checkers4Pi (or your chosen name)
+   - **App URL:** `https://your-server-domain.com`
+   - **Category:** Games > Board Games
+   - **Description:** Paste from GAME_DESCRIPTION.md
+   - **Icon:** Upload 512x512px PNG
+   - **Screenshots:** Upload 3-5 images
+   - **Permissions:** Username, Payments (even if not used yet)
+   - **Support Email:** Your contact email
+   - **Privacy Policy URL:** (optional but recommended)
+
+5. Review all information carefully
+6. Click "Submit for Review"
+7. You'll receive a submission confirmation
+
+#### 3. What Happens Next: The Review Process
+
+**Timeline:**
+- **Initial Review:** Typically 1-7 days
+- **Can vary:** Depending on submission volume and complexity
+- **Holidays/Weekends:** May extend the timeline
+- **Resubmissions:** Usually faster (1-3 days)
+
+**What Pi Team Reviews:**
+
+✅ **Functionality Check:**
+- App loads correctly in Pi Browser
+- No crashes or critical errors
+- Core features work as described
+- Good user experience
+
+✅ **Pi SDK Integration:**
+- Authentication works properly
+- SDK implemented correctly
+- No errors in Pi integration
+- Proper error handling
+
+✅ **Security Review:**
+- No obvious security vulnerabilities
+- Proper data handling
+- No malicious code
+- Safe for users
+
+✅ **Policy Compliance:**
+- Follows Pi Network Terms of Service
+- No prohibited content
+- No misleading descriptions
+- Age-appropriate content
+
+✅ **Quality Standards:**
+- Professional appearance
+- Works well on mobile
+- Good performance
+- Clear purpose and value
+
+**What They DON'T Review (Usually):**
+- ❌ Deep code audits of every file
+- ❌ Unused features or infrastructure code
+- ❌ Your specific coding style
+- ❌ Backend architecture details
+
+### 📬 How You'll Be Notified
+
+#### Notification Methods:
+
+**1. Email Notification**
+- Sent to the email associated with your Pi account
+- Contains approval status
+- Lists any issues found (if rejected)
+- Includes next steps
+
+**2. Pi Developer Portal**
+- Check "My Apps" dashboard
+- Status updates appear there
+- Messages from review team
+- Detailed feedback (if applicable)
+
+**3. In-App Notification (Pi App)**
+- May receive notification in Pi Network app
+- Check your Pi notifications
+
+#### Possible Outcomes:
+
+**✅ APPROVED**
+```
+Subject: Your Pi App "Checkers4Pi" has been approved for TestNet
+
+Congratulations! Your app has been approved for Pi Network TestNet.
+
+Your app is now live and accessible to Pi users through the Pi Browser.
+
+App Status: Active on TestNet
+Next Steps:
+- Monitor your app for any issues
+- Gather user feedback
+- When ready, you can apply for MainNet approval
+
+[View in Developer Portal]
+```
+
+**What to do after approval:**
+- [ ] Test the app in Pi Browser to confirm it's live
+- [ ] Monitor for any user-reported issues
+- [ ] Check analytics in Developer Portal
+- [ ] Consider gathering user feedback
+- [ ] Plan for MainNet migration (if desired)
+
+**⚠️ CHANGES REQUESTED**
+```
+Subject: Your Pi App "Checkers4Pi" requires changes
+
+Your app submission requires some changes before approval.
+
+Issues Found:
+1. [Specific issue description]
+2. [Another issue if applicable]
+
+Required Actions:
+- [What you need to fix]
+- [Any other requirements]
+
+Please make the necessary changes and resubmit.
+
+[View Details in Portal]
+```
+
+**What to do after changes requested:**
+- [ ] Carefully read all feedback
+- [ ] Address each issue mentioned
+- [ ] Test fixes thoroughly
+- [ ] Update your server with fixes
+- [ ] Reply in Developer Portal if clarification needed
+- [ ] Resubmit through portal
+- [ ] Wait for re-review (usually faster, 1-3 days)
+
+**❌ REJECTED**
+```
+Subject: Your Pi App "Checkers4Pi" submission has been rejected
+
+Unfortunately, your app does not meet Pi Network requirements at this time.
+
+Reasons for Rejection:
+- [Specific violation or issue]
+- [Policy violation if applicable]
+
+You may revise and resubmit if you can address these concerns.
+
+[View Details in Portal]
+```
+
+**What to do after rejection:**
+- [ ] Review rejection reasons carefully
+- [ ] Check if issues are fixable
+- [ ] Revise app to address all concerns
+- [ ] Consider reaching out to Pi support if unclear
+- [ ] Resubmit when issues are resolved
+
+### 🔍 Common Reasons for Rejection/Changes
+
+**Technical Issues:**
+- App doesn't load properly in Pi Browser
+- Authentication fails or has errors
+- Critical bugs or crashes
+- Poor mobile experience
+- Extremely slow loading times
+
+**Policy Violations:**
+- Misleading app description
+- Copyright/trademark issues
+- Age-inappropriate content
+- Spam or low-quality content
+- Attempts to game the system
+
+**SDK Integration Issues:**
+- Pi SDK not implemented correctly
+- Authentication flow broken
+- Error handling missing
+- Payment flows incorrect (if used)
+
+**Quality Issues:**
+- Extremely poor user interface
+- No clear value proposition
+- Broken core features
+- Unprofessional appearance
+
+### 📞 Getting Help During Review
+
+**If you have questions or concerns:**
+
+1. **Pi Developer Portal Support**
+   - Check documentation: https://developers.minepi.com/docs
+   - Look for "Support" or "Help" section
+   - May be able to message review team
+
+2. **Pi Developer Community**
+   - Pi Developer forums or Discord
+   - Other developers may have experienced similar issues
+   - Share experiences and solutions
+
+3. **Response Time**
+   - Support responses can take several days
+   - Be patient and professional
+   - Provide clear, detailed questions
+
+### ✅ After TestNet Approval - Next Steps
+
+**Immediate Actions:**
+1. **Test Your Live App**
+   - Open Pi Browser on your phone
+   - Navigate to your app
+   - Verify everything works
+   - Check that it shows up in Pi app directory (if applicable)
+
+2. **Monitor Performance**
+   - Check server logs for errors
+   - Monitor server resource usage
+   - Watch for any user-reported issues
+   - Review analytics in Developer Portal
+
+3. **Gather Feedback**
+   - Share with friends/family
+   - Ask users to test
+   - Note any issues or suggestions
+   - Consider improvements
+
+**Planning for MainNet:**
+4. **When You're Ready for MainNet:**
+   - Ensure app is stable (few/no bugs)
+   - Have good user feedback
+   - Plan security improvements
+   - Set up payment logging (if using payments)
+   - Prepare for higher standards
+
+5. **MainNet Submission:**
+   - Update code (`sandbox: false`)
+   - Update environment variables
+   - Ensure HTTPS is configured
+   - Enhance security measures
+   - Submit MainNet application through portal
+   - Wait for MainNet review (similar process)
+
+**Timeline Expectations:**
+- TestNet approval → Stay on TestNet as long as needed
+- No rush to move to MainNet
+- Many apps stay on TestNet for months while perfecting features
+- Move to MainNet only when you're confident and ready
 
 ---
 
