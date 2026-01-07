@@ -17,7 +17,10 @@ export interface SidebarProps {
   showPlayAgain?: boolean;
   onPlayAgain?: () => void;
   canUndo?: boolean;
-  onUndo?: () => void;  logo?: string;}
+  onUndo?: () => void;
+  logo?: string;
+  gameInProgress?: boolean;
+}
 
 // Helper to format milliseconds to MM:SS
 const formatTime = (ms: number): string => {
@@ -40,18 +43,47 @@ export function Sidebar({
   onPlayAgain,
   canUndo,
   onUndo,
-  logo
+  logo,
+  gameInProgress
 }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<'game' | 'settings' | 'colors' | 'board'>('game');
   const [currentMoveTime, setCurrentMoveTime] = useState(0);
 
-  // Update current move timer every 100ms
+  // Get winner from scores if available (winner is set when total is not 0 and the other is 0 or game is over)
+  // Actually, we need to know if the game is over. We'll infer from totalTime: if both timers are not running and showPlayAgain is true, stop timer.
+  const gameOver = showPlayAgain;
+
+  // Update current move timer every 100ms, but stop if game is over
   useEffect(() => {
+    if (gameOver) return;
     const interval = setInterval(() => {
       setCurrentMoveTime(Date.now() - turnStartTime);
     }, 100);
     return () => clearInterval(interval);
-  }, [turnStartTime]);
+  }, [turnStartTime, gameOver]);
+
+
+  // Stat labels and tooltips (match GameOverModal)
+  const STAT_LABELS = {
+    material: {
+      name: 'Material',
+      tooltip: 'Sum of all your pieces (regular = 3, king = 5).',
+    },
+    power: {
+      name: 'Power',
+      tooltip: 'Total value of your kings (each king = 5).',
+    },
+    strategy: {
+      name: 'Strategy',
+      tooltip: 'Mobility, advancement, center control, back rank, and support.',
+    },
+    total: {
+      name: 'Total',
+      tooltip: 'Sum of Material, Power, and Strategy.',
+    },
+  } as const;
+  type StatKey = keyof typeof STAT_LABELS;
+  const STAT_KEYS: StatKey[] = ['material', 'power', 'strategy', 'total'];
 
   const renderPlayerScore = (player: Player, label: string, emoji: string) => {
     const isActive = currentPlayer === player;
@@ -65,27 +97,20 @@ export function Sidebar({
       <div className={`player-score-card ${isActive ? 'active' : ''}`}>
         <div className="card-header">
           <span className="player-name">
-            <span className="player-emoji">{emoji}
-
-            </span>
+            <span className="player-emoji">{emoji}</span>
             <span className={colorClass}>{label}</span>
             {isAI && <span className="ai-difficulty-label"> {aiLevel.charAt(0).toUpperCase() + aiLevel.slice(1)}</span >}
-
             {isActive && <span className="animate-pulse">⏱️</span>}
           </span>
-          <span className="player-total-score">
-            {score.total.toFixed(0)}
-          </span>
         </div>
-
-        <div className="score-details">
-          <span>Mat: {score.material.toFixed(0)}</span>
-          <span className="opacity-50">|</span>
-          <span>Pow: {score.power.toFixed(0)}</span>
-          <span className="opacity-50">|</span>
-          <span>Str: {score.strategy.toFixed(0)}</span>
+        <div className="sidebar-stat-breakdown">
+          {STAT_KEYS.map((key) => (
+            <div className="sidebar-stat" key={key}>
+              <span className="sidebar-stat-label" title={STAT_LABELS[key].tooltip}>{STAT_LABELS[key].name}</span>
+              <span className="sidebar-stat-value">{score[key].toFixed(0)}</span>
+            </div>
+          ))}
         </div>
-
         <div className="timer-row">
           <span>Move: {isActive ? formatTime(moveTime) : '--:--'}</span>
           <span>Total: {formatTime(playerTotalTime)}</span>
@@ -182,6 +207,20 @@ export function Sidebar({
               >
                 <span>🔴</span> Advanced
               </button>
+
+              {/* AI Moves First toggle - only for Advanced level, disabled once game starts */}
+              {aiLevel === 'advanced' && (
+                <label className={`ai-first-toggle ${gameInProgress ? 'disabled' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={settings.aiMovesFirst}
+                    onChange={(e) => onSettingsChange({ aiMovesFirst: e.target.checked })}
+                    disabled={gameInProgress}
+                  />
+                  <span>AI moves first (extra challenge)</span>
+                  {gameInProgress && <span className="toggle-hint"> (restart to change)</span>}
+                </label>
+              )}
 
               <p className="difficulty-desc">
                 {aiLevel === 'beginner' && 'Random moves. Good for learning the rules.'}

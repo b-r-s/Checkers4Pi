@@ -1,6 +1,5 @@
 ﻿import { useState, useCallback, useEffect, useRef } from 'react';
 import type { BoardState, Position, GameState, Move, Player } from '../types/game';
-import { useSettings } from './useSettings';
 import { useAI } from './useAI';
 import { calculateScore } from '../utils/scoring';
 import { playMoveSound, playJumpSound, playKingSound, playAIMoveSound, playAIJumpSound } from '../utils/sound';
@@ -36,8 +35,10 @@ const createInitialBoard = (): BoardState => {
   return board;
 };
 
-export const useGameState = (onGameEnd?: (winner: Player | 'draw', moveCount: number) => void) => {
-  const { settings } = useSettings();
+export const useGameState = (
+  settings: import('./useSettings').GameSettings,
+  onGameEnd?: (winner: Player | 'draw', moveCount: number) => void
+) => {
   const { getBestMove } = useAI();
 
   // Map difficulty settings to AI levels
@@ -57,16 +58,19 @@ export const useGameState = (onGameEnd?: (winner: Player | 'draw', moveCount: nu
     const initialBoard = createInitialBoard();
     const redScore = calculateScore(initialBoard, 'red');
     const blackScore = calculateScore(initialBoard, 'black');
+    const aiLevel = getAILevelFromDifficulty(settings.difficulty);
+    // AI moves first only in advanced mode when setting is enabled
+    const aiMovesFirst = aiLevel === 'advanced' && settings.aiMovesFirst;
     
     return {
       board: initialBoard,
-      currentPlayer: 'red',
+      currentPlayer: aiMovesFirst ? 'black' : 'red',
       selectedPosition: null,
       validMoves: [],
       winner: null,
       gameMode: 'PvAI',
       isAiTurn: false,
-      aiLevel: getAILevelFromDifficulty(settings.difficulty),
+      aiLevel: aiLevel,
       scores: {
         red: redScore,
         black: blackScore
@@ -567,28 +571,35 @@ export const useGameState = (onGameEnd?: (winner: Player | 'draw', moveCount: nu
     const redScore = calculateScore(initialBoard, 'red');
     const blackScore = calculateScore(initialBoard, 'black');
     
-    setGameState(prev => ({
-      board: initialBoard,
-      currentPlayer: 'red',
-      selectedPosition: null,
-      validMoves: [],
-      winner: null,
-      gameMode: prev.gameMode,
-      isAiTurn: false,
-      aiLevel: getAILevelFromDifficulty(settings.difficulty),
-      scores: {
-        red: redScore,
-        black: blackScore
-      },
-      turnStartTime: Date.now(),
-      totalTime: { red: 0, black: 0 },
-      moveHistory: [],
-      lastUndoMove: undefined,
-      moveCount: 0,
-    }));
+    setGameState(prev => {
+      // Use the current aiLevel from game state, not from settings
+      const aiLevel = prev.aiLevel;
+      // AI moves first only in advanced mode when setting is enabled
+      const aiMovesFirst = aiLevel === 'advanced' && settings.aiMovesFirst;
+      
+      return {
+        board: initialBoard,
+        currentPlayer: aiMovesFirst ? 'black' : 'red',
+        selectedPosition: null,
+        validMoves: [],
+        winner: null,
+        gameMode: prev.gameMode,
+        isAiTurn: false,
+        aiLevel: aiLevel,
+        scores: {
+          red: redScore,
+          black: blackScore
+        },
+        turnStartTime: Date.now(),
+        totalTime: { red: 0, black: 0 },
+        moveHistory: [],
+        lastUndoMove: undefined,
+        moveCount: 0,
+      };
+    });
     setMultiJumpSource(null);
     setToastMessage(null);
-  }, [settings.difficulty]);
+  }, [settings.aiMovesFirst]);
 
   const clearUndoHighlight = useCallback(() => {
     setGameState(prev => ({

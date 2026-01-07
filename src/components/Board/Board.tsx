@@ -267,7 +267,8 @@ export const Board: React.FC<BoardProps> = ({ gameState, onTileClick, onMovePiec
       {toastMessage && <div className="toast-notification">{toastMessage}</div>}
       {showModal && winner && (
         <GameOverModal 
-          winner={winner} 
+          winner={winner}
+          scores={gameState.scores}
           onFadeComplete={() => {
             setShowModal(false);
             onModalFadeComplete?.();

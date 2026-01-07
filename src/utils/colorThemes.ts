@@ -1,5 +1,4 @@
 import type { PlayerColorTheme, ColorFilter, BoardColorTheme, BoardColors } from '../types/game';
-import goldBoardSquare from '../assets/gold-board-square.png';
 
 // CSS filter values to transform the red checker to different colors
 export const COLOR_THEMES: Record<PlayerColorTheme, ColorFilter> = {

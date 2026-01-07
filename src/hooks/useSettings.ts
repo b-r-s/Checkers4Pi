@@ -10,6 +10,7 @@ export interface GameSettings {
   showHints: boolean;
   playerColor: PlayerColorTheme;
   boardColors: BoardColorTheme;
+  aiMovesFirst: boolean;
 }
 
 const DEFAULT_SETTINGS: GameSettings = {
@@ -18,6 +19,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   showHints: false,
   playerColor: 'red',
   boardColors: 'classic',
+  aiMovesFirst: false,
 };
 
 export const useSettings = () => {

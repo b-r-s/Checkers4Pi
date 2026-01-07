@@ -33,9 +33,9 @@
 }
 
 span.animate-pulse {
-    transform: scale(3);
-    margin-left: 9vw;
-    padding-top: 3vh;
+    transform: scale(1.4);
+    margin-left: 3vw;
+    padding-top: 0vh;
 }
 
 /* Tab Navigation */
@@ -175,14 +175,35 @@ span.animate-pulse {
   color: var(--text-primary);
 }
 
-.score-details {
+
+.sidebar-stat-breakdown {
   display: flex;
-  gap: 0.5rem;
-  font-size: 0.65rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin: 0.5rem 0 0.5rem 0;
+}
+.sidebar-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+.sidebar-stat-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #e5e7eb;
+  margin-bottom: 0.1rem;
+  cursor: help;
+}
+.sidebar-stat-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  background: #222;
+  border-radius: 6px;
+  padding: 0.1em 0.6em;
+  margin-bottom: 0.1em;
 }
 
 .ai-difficulty-label {
@@ -239,6 +260,48 @@ span.animate-pulse {
   color: var(--text-secondary);
   margin-top: 0.5rem;
   text-align: center;
+  font-style: italic;
+}
+
+/* AI Moves First Toggle */
+.ai-first-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ai-first-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ai-first-toggle input[type="checkbox"] {
+  accent-color: #ef4444;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.ai-first-toggle.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ai-first-toggle.disabled input[type="checkbox"] {
+  cursor: not-allowed;
+}
+
+.ai-first-toggle .toggle-hint {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
   font-style: italic;
 }
 

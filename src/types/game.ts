@@ -4,7 +4,7 @@ export type Player = 'red' | 'black';
 
 export type PlayerColorTheme = 'red' | 'blue' | 'green' | 'purple' | 'orange' | 'pink';
 
-export type BoardColorTheme = 'classic' | 'wooden' | 'modern' | 'ocean' | 'goldsilver' | 'copperbronze' | 'blackgold';
+export type BoardColorTheme = 'classic' | 'wooden' | 'modern' | 'ocean';
 
 export interface ColorFilter {
   hueRotate: number;

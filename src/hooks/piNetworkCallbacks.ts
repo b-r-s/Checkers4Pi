@@ -64,13 +64,13 @@ export const createRealPaymentCallbacks = (
   },
 
   // User cancelled
-  onCancel: (paymentId: string) => {
+  onCancel: (_paymentId: string) => {
     setCurrentPayment(null);
     resolve({ success: false, error: 'Payment cancelled by user' });
   },
 
   // Error occurred
-  onError: (error: Error, payment?: any) => {
+  onError: (error: Error, _payment?: any) => {
     setCurrentPayment(null);
     resolve({ success: false, error: error.message });
   },
