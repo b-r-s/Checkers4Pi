@@ -1,15 +1,13 @@
 /* Animated border button - pure CSS version */
 .game-button {
-  --primary-color: #ec4899;
-  --secondary-color: #f97316;
-  --outer-color: #84cc16;
   position: relative;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   color: #e2e8f0;
-  background: #0f172a;
+  background: #7e22ce99;
+  ;
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -19,127 +17,7 @@
 
 .game-button:hover {
   color: #ffffff;
-}
-
-/* Primary animated gradient border (clockwise) */
-.game-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  padding: 3px;
-  background: conic-gradient(
-    from var(--angle, 0deg),
-    transparent 0%,
-    transparent 75%,
-    var(--primary-color) 80%,
-    var(--primary-color) 85%,
-    transparent 90%,
-    transparent 100%
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: rotate-border-cw 3s linear infinite;
-}
-
-/* Secondary animated gradient border (counter-clockwise) */
-.game-button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  padding: 3px;
-  background: conic-gradient(
-    from var(--angle-reverse, 0deg),
-    transparent 0%,
-    transparent 75%,
-    var(--secondary-color) 80%,
-    var(--secondary-color) 85%,
-    transparent 90%,
-    transparent 100%
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: rotate-border-ccw 3s linear infinite;
-}
-
-/* Outer border (border-2) - alternates direction */
-.game-button-outer-border {
-  position: absolute;
-  inset: -6px;
-  border-radius: 16px;
-  padding: 2px;
-  background: conic-gradient(
-    from var(--angle-outer, 0deg),
-    transparent 0%,
-    transparent 75%,
-    var(--outer-color) 80%,
-    var(--outer-color) 85%,
-    transparent 90%,
-    transparent 100%
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: rotate-border-alternate 3s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes rotate-border-cw {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@keyframes rotate-border-ccw {
-  to {
-    --angle-reverse: -360deg;
-  }
-}
-
-@keyframes rotate-border-alternate {
-  from {
-    --angle-outer: 0deg;
-  }
-  to {
-    --angle-outer: 360deg;
-  }
-}
-
-/* Enable CSS custom property animation */
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@property --angle-reverse {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@property --angle-outer {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+  border: solid var(--btn-border) 3px;
 }
 
 .game-button-text {
@@ -148,4 +26,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.game-button.instruction-button {
+  margin-bottom: 4vh
 }

@@ -85,7 +85,10 @@ export function Sidebar({
   type StatKey = keyof typeof STAT_LABELS;
   const STAT_KEYS: StatKey[] = ['material', 'power', 'strategy', 'total'];
 
-  const renderPlayerScore = (player: Player, label: string, emoji: string) => {
+  // Map playerColor to emoji for display
+  // No emoji needed, use CSS circle for color indicator
+
+  const renderPlayerScore = (player: Player) => {
     const isActive = currentPlayer === player;
     const score = scores[player];
     const playerTotalTime = totalTime[player];
@@ -93,11 +96,22 @@ export function Sidebar({
     const colorClass = player === 'red' ? 'text-red' : 'text-black';
     const isAI = player === 'black' ? true : false;
 
+    // Dynamic label and emoji for human player
+    let label = '';
+    let colorClassName = '';
+    if (player === 'red') {
+      label = `${COLOR_THEME_LABELS[settings.playerColor].replace(/^[^ ]+ /, '')} (You)`; // Remove emoji from label
+      colorClassName = `color-indicator color-${settings.playerColor}`;
+    } else {
+      label = 'Black (AI)';
+      colorClassName = 'color-indicator color-black';
+    }
+
     return (
       <div className={`player-score-card ${isActive ? 'active' : ''}`}>
         <div className="card-header">
           <span className="player-name">
-            <span className="player-emoji">{emoji}</span>
+            <span className={colorClassName}></span>
             <span className={colorClass}>{label}</span>
             {isAI && <span className="ai-difficulty-label"> {aiLevel.charAt(0).toUpperCase() + aiLevel.slice(1)}</span >}
             {isActive && <span className="animate-pulse">⏱️</span>}
@@ -106,7 +120,10 @@ export function Sidebar({
         <div className="sidebar-stat-breakdown">
           {STAT_KEYS.map((key) => (
             <div className="sidebar-stat" key={key}>
-              <span className="sidebar-stat-label" title={STAT_LABELS[key].tooltip}>{STAT_LABELS[key].name}</span>
+              <span className="sidebar-stat-label tooltip-container">
+                {STAT_LABELS[key].name}
+                <span className="sidebar-tooltip">{STAT_LABELS[key].tooltip}</span>
+              </span>
               <span className="sidebar-stat-value">{score[key].toFixed(0)}</span>
             </div>
           ))}
@@ -168,8 +185,8 @@ export function Sidebar({
               <h2 className="sidebar-title">Current Match</h2>
             </div>
             <div className="match-stats-container">
-              {renderPlayerScore('red', 'Red (You)', '🔴')}
-              {renderPlayerScore('black', 'Black (AI)', '⚫')}
+              {renderPlayerScore('red')}
+              {renderPlayerScore('black')}
             </div>
             
             {/* Undo Move Button - Only for Beginner Level */}

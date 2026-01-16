@@ -1,3 +1,9 @@
+.gameover-stats-player-label,
+.gameover-stats-row {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 .game-over-overlay {
   position: absolute;
   top: 0;

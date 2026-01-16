@@ -5,6 +5,7 @@ import './GameButton.css';
 interface GameButtonProps {
   text?: string;
   onClick?: () => void;
+  className?: string;
 }
 
 export const GameButton: React.FC<GameButtonProps> = ({ 
@@ -14,11 +15,9 @@ export const GameButton: React.FC<GameButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className="game-button"
+      className="game-button instruction-button"
     >
-      {/* Outer border element */}
-      <span className="game-button-outer-border"></span>
-      {/* Button Content */}
+
       <span className="game-button-text">
         {text}
       </span>

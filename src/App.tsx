@@ -7,7 +7,8 @@ import { useGameState } from './hooks/useGameState';
 import { useSettings } from './hooks/useSettings';
 import { BOARD_COLOR_SCHEMES } from './utils/colorThemes';
 import { useEffect, useState } from 'react';
-import logo from './assets/logo.png';
+import logo from './assets/icon-192x192.png';
+import { GameButton } from './components/GameButton/GameButton';
 
 
 
@@ -52,7 +53,16 @@ function App() {
 
   if (showSplash) {
     if (showInstructions) {
-      return <div><GamePlayInstructions /><div style={{textAlign:'center',marginTop:'1.5rem'}}><button className="start-button" onClick={handleHideInstructions}>Back</button></div></div>;
+      return (
+        <div>
+          <GamePlayInstructions />
+          <div style={{textAlign:'center',marginTop:'1.5rem'}}>
+            <GameButton className="instructions-back-btn" 
+            text='Back'
+            onClick={handleHideInstructions}></GameButton>
+          </div>
+        </div>
+      );
     }
     return <SplashScreen onStart={handleStartGame} onShowInstructions={handleShowInstructions} />;
   }

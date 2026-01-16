@@ -6,26 +6,21 @@
 }
 
 .checkerboard {
-  display: grid;
-  margin-top: 3.5vw;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  gap: 0;
-  width: 47vw;
-  aspect-ratio: 1;
-  height: 47vw;
-  max-width: 600px;
-  max-height: 600px;
-  border: 16px solid #1e293b;
-  border-radius: 4px;
-  margin-left: 3vw;
-  box-shadow: 0 8px 0 #0a0f1a,
-    0 16px 0 #0f172a,
-    0 24px 0 #1a1f2e,
-    0 50px 60px rgba(0, 0, 0, 0.7);
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
+    display: grid;
+    margin-top: 9.6vw;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 0;
+    width: 40vw;
+    aspect-ratio: 1;
+    height: 40vw;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 4px;
+    margin-left: 2vw;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .board-square {
@@ -68,7 +63,7 @@ v
   position: absolute;
   width: 30%;
   height: 30%;
-  background-color: rgba(147, 51, 234, 0.6);
+  background-color: rgba(255, 255, 255);
   border-radius: 50%;
   animation: pulse 1.5s ease-in-out infinite;
   pointer-events: none;
@@ -101,11 +96,11 @@ v
 
   0%,
   100% {
-    box-shadow: inset 0 0 25px rgba(74, 222, 128, 0.7);
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.5);
   }
 
   50% {
-    box-shadow: inset 0 0 35px rgba(74, 222, 128, 0.9);
+    box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.9);
   }
 }
 
@@ -257,7 +252,7 @@ v
     height: 70vw;
     margin-left: 0;
     margin-top: 1rem;
-    border-width: 12px;
+    /* border-width: 12px; */
   }
 }
 
@@ -266,11 +261,11 @@ v
     width: 85vw;
     height: 85vw;
     margin-top: 0.5rem;
-    border-width: 10px;
+    /* border-width: 10px;
     box-shadow: 0 6px 0 #0a0f1a,
       0 12px 0 #0f172a,
       0 18px 0 #1a1f2e,
-      0 30px 40px rgba(0, 0, 0, 0.7);
+      0 30px 40px rgba(0, 0, 0, 0.7); */
   }
 
   .board-square.valid-move::after,
@@ -291,11 +286,11 @@ v
     width: 92vw;
     height: 92vw;
     margin-top: 0.25rem;
-    border-width: 8px;
+    /* border-width: 8px;
     box-shadow: 0 4px 0 #0a0f1a,
       0 8px 0 #0f172a,
       0 12px 0 #1a1f2e,
-      0 20px 30px rgba(0, 0, 0, 0.7);
+      0 20px 30px rgba(0, 0, 0, 0.7); */
   }
 
   .board-square.valid-move::after,

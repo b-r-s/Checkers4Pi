@@ -3,11 +3,15 @@ import { FallingEmojis } from './FallingEmojis';
 import './GameOverModal.css';
 
 
+
 import type { GameScores } from '../../utils/scoring';
+import { COLOR_THEME_LABELS } from '../../utils/colorThemes';
+import type { PlayerColorTheme } from '../../types/game';
 
 interface GameOverModalProps {
   winner: 'red' | 'black' | 'draw';
   scores: GameScores;
+  playerColor: PlayerColorTheme;
   onFadeComplete?: () => void;
 }
 
@@ -34,7 +38,7 @@ const STAT_LABELS = {
 type StatKey = keyof typeof STAT_LABELS;
 const STAT_KEYS: StatKey[] = ['material', 'power', 'strategy', 'total'];
 
-export const GameOverModal: React.FC<GameOverModalProps> = ({ winner, scores, onFadeComplete }) => {
+export const GameOverModal: React.FC<GameOverModalProps> = ({ winner, scores, playerColor, onFadeComplete }) => {
   const isRedWin = winner === 'red';
   const [isVisible, setIsVisible] = useState(true);
 
@@ -77,7 +81,9 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ winner, scores, on
           </p>
           <div className="gameover-stats-breakdown">
             <div className="gameover-stats-row">
-              <div className="gameover-stats-player-label" style={{ color: '#ef4444' }}>Red</div>
+              <div className="gameover-stats-player-label">
+                {COLOR_THEME_LABELS[playerColor]} (You)
+              </div>
               {STAT_KEYS.map((key) => (
                 <div className="gameover-stat" key={key}>
                   <span className="gameover-stat-label" title={STAT_LABELS[key].tooltip}>{STAT_LABELS[key].name}</span>
@@ -86,7 +92,9 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ winner, scores, on
               ))}
             </div>
             <div className="gameover-stats-row">
-              <div className="gameover-stats-player-label" style={{ color: '#222' }}>Black</div>
+              <div className="gameover-stats-player-label">
+                Black (AI)
+              </div>
               {STAT_KEYS.map((key) => (
                 <div className="gameover-stat" key={key}>
                   <span className="gameover-stat-label" title={STAT_LABELS[key].tooltip}>{STAT_LABELS[key].name}</span>

@@ -1,13 +1,48 @@
+/* Tooltip styles for stat labels */
+.tooltip-container {
+  position: relative;
+  cursor: help;
+}
+
+.sidebar-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: max-content;
+  max-width: 12vw;
+  background: #222;
+  color: #fff;
+  text-align: left;
+  border: 1px solid var(--btn-border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%);
+  font-size: 0.85em;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.tooltip-container:hover .sidebar-tooltip,
+.tooltip-container:focus .sidebar-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* Sidebar Logic */
 .sidebar {
   background: var(--surface-primary-opacity);
   border-radius: var(--radius-lg);
   padding: 0.75rem;
-  /* Reduced padding */
+  margin-top: 3vh;
   min-width: 250px;
   /* Slightly narrower */
   width: 100%;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 11px 28px -5px #fbbf24;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -29,13 +64,13 @@
   height: 60px;
   object-fit: contain;
   flex-shrink: 0;
-  border: var(--board-dark) 2px solid;
+
 }
 
 span.animate-pulse {
-    transform: scale(1.4);
-    margin-left: 3vw;
-    padding-top: 0vh;
+  transform: scale(1.4);
+  margin-left: 3vw;
+  padding-top: 0vh;
 }
 
 /* Tab Navigation */
@@ -99,6 +134,7 @@ span.animate-pulse {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -137,6 +173,7 @@ span.animate-pulse {
 }
 
 .sidebar-title
+
 /* Player Cards */
 .player-score-card {
   padding: 0.75rem;
@@ -183,12 +220,14 @@ span.animate-pulse {
   gap: 1.2rem;
   margin: 0.5rem 0 0.5rem 0;
 }
+
 .sidebar-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 60px;
 }
+
 .sidebar-stat-label {
   font-size: 0.8rem;
   font-weight: 500;
@@ -196,6 +235,7 @@ span.animate-pulse {
   margin-bottom: 0.1rem;
   cursor: help;
 }
+
 .sidebar-stat-value {
   font-size: 1.1rem;
   font-weight: bold;
@@ -355,18 +395,18 @@ span.animate-pulse {
 }
 
 .settings-content {
-    margin-top: 5vh;
-    padding: 0 0.5rem;
+  margin-top: 5vh;
+  padding: 0 0.5rem;
 }
 
 /* Color indicator circles */
 .color-indicator {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   margin-right: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgb(255 255 255 / 67%);
 }
 
 .color-indicator.color-red {
@@ -391,6 +431,10 @@ span.animate-pulse {
 
 .color-indicator.color-pink {
   background-color: #ec4899;
+}
+
+.color-indicator.color-black {
+  background: black;
 }
 
 .color-btn {
@@ -439,33 +483,33 @@ span.animate-pulse {
     margin-bottom: 0.5rem;
     position: relative;
     text-align: center;
+  }
 }
-  }
 
-  .player-score-card {
-    padding: 0.5rem;
-  }
+.player-score-card {
+  padding: 0.5rem;
+}
 
-  .player-name {
-    font-size: 0.8rem;
-  }
+.player-name {
+  font-size: 0.8rem;
+}
 
-  .player-total-score {
-    font-size: 0.9rem;
-  }
+.player-total-score {
+  font-size: 0.9rem;
+}
 
-  .score-details {
-    font-size: 0.6rem;
-  }
+.score-details {
+  font-size: 0.6rem;
+}
 
-  .difficulty-btn {
-    padding: 0.5rem;
-    font-size: 0.75rem;
-  }
+.difficulty-btn {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+}
 
-  .difficulty-desc {
-    font-size: 0.65rem;
-  }
+.difficulty-desc {
+  font-size: 0.65rem;
+}
 }
 
 @media (max-width: 480px) {

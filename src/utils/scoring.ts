@@ -72,7 +72,9 @@ export const calculateScore = (board: BoardState, player: Player): ScoreBreakdow
       if (!piece || piece.color !== player) continue;
 
       // Level 1: Material
-      if (!piece.isKing) {
+      if (piece.isKing) {
+        material += PIECE_VALUES.KING;
+      } else {
         material += PIECE_VALUES.REGULAR;
       }
 
