@@ -1,122 +1,71 @@
-﻿import { useState, useMemo } from 'react';
-import * as PiSDK from '@xhilo/pi-sdk';
+﻿import { useState, useMemo, useEffect } from 'react';
+import { PiNetworkClient } from '@xhilo/pi-sdk';
 import { createRealPaymentCallbacks } from './piNetworkCallbacks';
 
-// Type definitions for Pi Network SDK
+// Type definitions for Pi Network SDK alignment
 interface PiUser {
   username: string;
   uid: string;
 }
-
-interface PiAuth {
-  user: PiUser;
-  accessToken: string;
-}
-
-interface PiPaymentDTO {
-  identifier: string;
-  user_uid: string;
-  amount: number;
-  memo: string;
-  metadata: Record<string, unknown>;
-  from_address: string;
-  to_address: string;
-  direction: string;
-  created_at: string;
-  network: string;
-  status: {
-    developer_approved: boolean;
-    transaction_verified: boolean;
-    developer_completed: boolean;
-    cancelled: boolean;
-    user_cancelled: boolean;
-  };
-  transaction: {
-    txid: string;
-    verified: boolean;
-    _link: string;
-  } | null;
-}
-
-interface PaymentCallbacks {
-  onReadyForServerApproval: (paymentId: string) => void;
-  onReadyForServerCompletion: (paymentId: string, txid: string) => void;
-  onCancel: (paymentId: string) => void;
-  onError: (error: Error, payment?: PiPaymentDTO) => void;
-}
-
-interface PiNetworkInstance {
-  initialize: () => Promise<void>;
-  isAuthenticated: () => boolean;
-  getUser: () => PiUser | null;
-  authenticate: (scopes: string[], callback: (error: Error | null, auth: PiAuth | null) => void) => Promise<void>;
-  createPayment: (
-    config: { amount: number; memo: string; metadata: Record<string, unknown> },
-    callbacks: PaymentCallbacks
-  ) => void;
-}
-
-// Handle both default and named exports from Pi SDK
-const PiNetwork = 
-  (PiSDK as Record<string, unknown>).PiNetwork || 
-  ((PiSDK as Record<string, unknown>).default as Record<string, unknown> | undefined)?.PiNetwork || 
-  (PiSDK as Record<string, unknown>).default;
 
 export const usePiNetwork = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<PiUser | null>(null);
   const [currentPayment, setCurrentPayment] = useState<string | null>(null);
 
-  // Initialize Pi SDK instance once
-  const pi = useMemo<PiNetworkInstance | null>(() => {
-    if (typeof PiNetwork !== 'function') {
-      return null;
-    }
-
+  // Initialize Pi SDK instance
+  const pi = useMemo(() => {
     try {
-      const piInstance = new (PiNetwork as new (config: { version: string; sandbox: boolean }) => PiNetworkInstance)({
-        version: "2.0",
-        sandbox: true,
-      });
-
-      // Initialize and check authentication
-      piInstance.initialize().then(() => {
-        if (piInstance.isAuthenticated()) {
-          setIsAuthenticated(true);
-          setUser(piInstance.getUser());
-        }
-      }).catch(() => {
-        // Silent catch - SDK not available
-      });
-
-      return piInstance;
+      return new PiNetworkClient(true); // sandbox mode
     } catch {
       return null;
     }
   }, []);
 
+  // Initialize and check authentication on mount
+  useEffect(() => {
+    if (!pi) return;
+
+    pi.initialize().then((result) => {
+      if (result.success && pi.getUser()) {
+        const currentUser = pi.getUser();
+        if (currentUser) {
+          setIsAuthenticated(true);
+          setUser({
+            uid: currentUser.uid,
+            username: currentUser.username || ''
+          });
+        }
+      }
+    }).catch(() => {
+      // Silent catch
+    });
+  }, [pi]);
+
   const authenticate = async () => {
     if (!pi) return;
 
     try {
-      await pi.authenticate(['username', 'payments'], (error: Error | null, auth: PiAuth | null) => {
-        if (error) {
-          return;
-        }
-
-        if (auth) {
-          setIsAuthenticated(true);
-          setUser(auth.user);
-        }
+      // SDK authenticate signature: (scopes, onIncompletePaymentFound)
+      const result = await pi.authenticate(['username', 'payments'], (payment) => {
+        console.log('Incomplete payment found:', payment);
       });
-    } catch {
-      // Silent catch
+
+      if (result.success && result.data) {
+        setIsAuthenticated(true);
+        setUser({
+          uid: result.data.uid,
+          username: result.data.username || ''
+        });
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
     }
   };
 
   const createPayment = async (
-    amount: number, 
-    memo: string, 
+    amount: number,
+    memo: string,
     metadata: Record<string, unknown> = {}
   ): Promise<{ success: boolean; paymentId?: string; error?: string }> => {
     if (!pi || !isAuthenticated) {

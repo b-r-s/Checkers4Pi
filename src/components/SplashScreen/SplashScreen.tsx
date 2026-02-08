@@ -11,30 +11,34 @@ interface SplashScreenProps {
 
 export function SplashScreen({ onStart, onShowInstructions }: SplashScreenProps) {
   return (
-    <div className="splash-container">
-      <div className="image-wrapper">
-        <img src={splashImage} alt="Splash" className="splash-image" />
-      </div>
+    <div className="splash-wrapper">
+      <div className="splash-container">
+        <div className="image-wrapper">
+          <img src={splashImage} alt="Splash" className="splash-image" />
+        </div>
 
-      <div className="button-row">
+        <div className="button-row">
           <GameButton
             label="Start Game"
             color='white'
             opacity={0.7}
             hue={NeonColors.Green}
             onClick={onStart}
+            fontSize="1.8rem"
           />
 
-        <GameButton
-          label="Game Play"
-          hue={NeonColors.Green}
-          color='white'
-          opacity={0.7}
-          width={200}
-          height={50}
-          padding={5}
-          onClick={onShowInstructions}
-        />
+          <GameButton
+            label="Game Play"
+            hue={NeonColors.Green}
+            color='white'
+            opacity={0.7}
+            width={200}
+            height={50}
+            padding={5}
+            onClick={onShowInstructions}
+            fontSize="1.8rem"
+          />
+        </div>
       </div>
     </div>
   );

@@ -24,6 +24,16 @@ Use this checklist to maintain the link between your local code (Desktop) and yo
 * **Option B (Mobile Mirroring):** Use a tool like **Vysor** or **AirPlay** to show your phone screen while you interact with the app.
 * **Key Shot:** Make sure to capture the moment the **Pi Consent Popup** appears and you tap "Allow."
 
+### Resetting Authentication (To show the popup again)
+If you are already authorized, you won't see the consent popup. To force it to appear for your video:
+1. **Revoke Permissions:** 
+   * Open the main **Pi Network App** (mining app) on your phone.
+   * Menu > **Settings** > **App Permissions**.
+   * Find your app and tap **Remove/Revoke**.
+2. **Clear Application Cache:**
+   * In the Pi Browser, you may need to clear the app cache or use the `logout()` function if available in your UI to ensure the state resets.
+3. **Re-Initialize:** The next time you open the app, `Pi.authenticate()` will trigger the system prompt again.
+
 ## 4. Troubleshooting
 * **Refresh Issue:** If the desktop app loses connection, re-run the "Authorize Sandbox" step on the phone.
 * **White Screen:** Ensure your Desktop Firewall isn't blocking the local port (3000, 8080, etc.).

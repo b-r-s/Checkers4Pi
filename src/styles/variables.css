@@ -5,8 +5,8 @@
    */
 
   /* Backgrounds - 3-Tier Hierarchy */
-  /* Darkest: Main Container (Deep Purple/Black) */
-  --theme-bg-dark: oklch(15% 0.05 285);
+  /* Darkest: Main Container (Deep Purple) */
+  --theme-bg-dark: #33124e;
 
   /* Medium: Nested Container (Rich Purple) */
   --theme-bg-medium: oklch(25% 0.10 285);

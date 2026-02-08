@@ -18,10 +18,12 @@
 
 ---
 
+
 ## 🛠 Technical Stack
-- **Frontend:** React 19 + TypeScript
+- **Frontend:** React 19 + TypeScript + Vite
+- **Deployment:** Hosted on Vercel (Optimized for Pi Browser Webviews)
 - **AI Engine:** Minimax Algorithm with Alpha-Beta Pruning ([Strategy Doc](./docs/AI-STRATEGY.md))
-- **Styling:** All Css is handcoded (no frameworks are sed and it is optimized for high-contrast mobile play)
+- **Styling:** Custom Vanilla CSS (Zero-framework architecture for high-contrast mobile play and minimal bundle size)
 
 ---
 

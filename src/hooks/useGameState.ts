@@ -101,8 +101,12 @@ export const useGameState = (
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
     }
-    setToastMessage(msg);
-    toastTimeoutRef.current = setTimeout(() => setToastMessage(null), TOAST_DURATION_MS);
+    // Clear first to force React to unmount, then set new message on next tick
+    setToastMessage(null);
+    setTimeout(() => {
+      setToastMessage(msg);
+      toastTimeoutRef.current = setTimeout(() => setToastMessage(null), TOAST_DURATION_MS);
+    }, 10);
   }, []);
 
   // Clean up toast timeout when component unmounts

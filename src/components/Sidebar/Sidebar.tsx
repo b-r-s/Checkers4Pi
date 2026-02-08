@@ -57,7 +57,7 @@ export function Sidebar({
   const [currentMoveTime, setCurrentMoveTime] = useState(0);
 
   // Get winner from scores if available (winner is set when total is not 0 and the other is 0 or game is over)
-  // Actually, we need to know if the game is over. We'll infer from totalTime: if both timers are not running and showPlayAgain is true, stop timer.
+  // actually, we need to know if the game is over. We'll infer from totalTime: if both timers are not running and showPlayAgain is true, stop timer.
   const gameOver = showPlayAgain;
 
   // Update current move timer every 100ms, but stop if game is over
@@ -158,24 +158,28 @@ export function Sidebar({
       <div className="sidebar-tabs">
         <GameButton
           hue={NeonColors.Purple}
+          hoverHue={NeonColors.Gold}
           label='Stats'
           onClick={() => setActiveTab('game')}
           className='tab-button'
         />
         <GameButton
           hue={NeonColors.Purple}
+          hoverHue={NeonColors.Gold}
           label='AI'
           onClick={() => setActiveTab('settings')}
           className='tab-button'
         />
         <GameButton
           hue={NeonColors.Purple}
+          hoverHue={NeonColors.Gold}
           label='Pieces'
           onClick={() => setActiveTab('colors')}
           className='tab-button'
         />
         <GameButton
           hue={NeonColors.Purple}
+          hoverHue={NeonColors.Gold}
           label='Board'
           onClick={() => setActiveTab('board')}
           className='tab-button'

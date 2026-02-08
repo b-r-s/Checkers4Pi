@@ -1,8 +1,6 @@
 import React from 'react';
 import './GamePlayInstructions.css';
 
-import { GameButton } from '../GameButton/GameButton';
-import { NeonColors } from '../../types/neon-hues';
 
 interface GamePlayInstructionsProps {
   onBack: () => void;
@@ -12,6 +10,7 @@ interface InstructionItem {
   title: string;
   text: string | string[];
 }
+
 
 const instructions: InstructionItem[] = [
   {
@@ -69,23 +68,29 @@ const renderText = (text: string | string[]) => {
   return text;
 };
 
+// This creates a standard JavaScript string
+const backLabel = 'Back';
+
 export const GamePlayInstructions: React.FC<GamePlayInstructionsProps> = ({ onBack }) => (
   <div className="gameplay-instructions-container">
-    <h2>How to Play Checkers4Pi</h2>
-    <ul className="gameplay-instructions-list">
-      {instructions.map((item, idx) => (
-        <li key={idx} className="gameplay-instruction-item">
-          <strong>{item.title}:</strong> {renderText(item.text)}
-        </li>
+    <h2>How to Play</h2>
+
+    <div className="gameplay-instructions-list">
+      {instructions.map((item, index) => (
+        <div key={index} className="gameplay-instruction-item">
+          <strong>{item.title}</strong>
+          <div>{renderText(item.text)}</div>
+        </div>
       ))}
-    </ul>
+    </div>
+
     <div className="instructions-actions">
-      <GameButton
-        hue={NeonColors.Purple}
-        label='Return to Splashscreen'
+      <button
         onClick={onBack}
-        width={271}
-      />
+        className="game-btn back-btn"
+      >
+        {backLabel}
+      </button>
     </div>
   </div>
 );

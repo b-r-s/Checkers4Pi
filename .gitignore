@@ -31,3 +31,19 @@ dist-ssr
 
 # Application files
 /keep-these-files/
+
+# Pi Submission Docs (private/internal)
+/docs/PiSubmissionDocs/
+
+# Personal/Tax Data (per compliance rules)
+*.csv
+*.xls
+*.xlsx
+
+# AI Agent workspace files
+.agent/
+.snapshots/
+skills/
+
+# Development reports
+unused_css_report.txt

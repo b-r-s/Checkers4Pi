@@ -1,18 +1,7 @@
-/* Game Over Modal Styles */
-
-.play-again-btn {
-  /* Placeholder for potential specific overrides if needed */
-}
-
-.gameover-stats-player-label,
-.gameover-stats-row {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
+/* Game Over Modal Styles - Mobile First */
 
 .game-over-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -35,20 +24,20 @@
 
 .game-over-content {
   background-color: #2d1b4e;
-  /* Dark Amethyst */
-  padding: 2rem 4rem;
-  border-radius: 16px;
+  padding: 1.25rem 2rem;
+  border-radius: 12px;
   border: 2px solid var(--sunlight-gold);
   text-align: center;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
   transform: scale(1);
-  color: #fff;
+  color: var(--text-primary);
   animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-width: 85vw;
 }
 
 .game-over-title {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -69,9 +58,9 @@
 }
 
 .game-over-message {
-  color: #e5e7eb;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
 }
 
 .gameover-stats-breakdown {
@@ -84,48 +73,169 @@
 .gameover-stats-row {
   display: flex;
   align-items: flex-end;
-  gap: 2.5rem;
+  gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
+  /* Safety for very small screens */
 }
 
-.gameover-stats-player-label {
+.gameover-stats-player- {
   font-weight: bold;
-  font-size: 1.1rem;
-  min-width: 60px;
+  font-size: 0.9rem;
+  min-width: 50px;
   text-align: right;
-  margin-right: 0.5rem;
-  color: var(--sunlight-gold);
+  margin-right: 0.3rem;
+  color: var(--accent-dark);
 }
 
 .gameover-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 70px;
+  min-width: 60px;
   position: relative;
-  /* Anchor for tooltips */
 }
 
 .gameover-stat-label {
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #d1d5db;
+  color: var(--text-primary);
   margin-bottom: 0.2rem;
   cursor: help;
 }
 
 .gameover-stat-value {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
-  color: #fff;
+  color: var(--text-primary);
   background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 0.15em 0.7em;
-  margin-bottom: 0.1em;
+  padding: 0.15em 0.5em;
   border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-/* Standardized Tooltip Styles */
+.play-again-btn {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  animation: buttonFadeIn 0.5s ease-out;
+  min-height: 44px;
+}
+
+/* ==========================================================================
+   Medium Screens (Tablets, 768px+)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+  .game-over-content {
+    padding: 1.5rem 2.5rem;
+    max-width: 90vw;
+  }
+
+  .game-over-title {
+    font-size: 2.5rem;
+  }
+
+  .game-over-message {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .gameover-stats-player- {
+    font-size: 1.1rem;
+    min-width: 60px;
+  }
+
+  .gameover-stat {
+    min-width: 70px;
+  }
+
+  .gameover-stat-label {
+    font-size: 0.9rem;
+  }
+
+  .gameover-stat-value {
+    font-size: 1.2rem;
+  }
+
+  .play-again-btn {
+    padding: 0.65rem 1.75rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* ==========================================================================
+   Large Screens (Desktop, 1024px+)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  .game-over-content {
+    padding: 2rem 4rem;
+    max-width: none;
+  }
+
+  .game-over-title {
+    font-size: 3rem;
+  }
+
+  .game-over-message {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .gameover-stats-row {
+    gap: 2.5rem;
+  }
+
+  .gameover-stat-label {
+    font-size: 1rem;
+  }
+
+  .gameover-stat-value {
+    font-size: 1.3rem;
+  }
+
+  .play-again-btn {
+    padding: 0.75rem 2rem;
+    font-size: 1.2rem;
+  }
+}
+
+/* Utility & Specialty Queries */
+
+@media (hover: hover) {
+  .play-again-btn:hover {
+    background-color: var(--bg-medium);
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.3);
+  }
+
+  .tooltip-container:hover .sidebar-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .play-again-btn {
+    min-height: 48px;
+    min-width: 120px;
+  }
+
+  .play-again-btn:active {
+    transform: scale(0.95);
+  }
+}
+
 .tooltip-container {
   position: relative;
   cursor: help;
@@ -139,10 +249,10 @@
   width: max-content;
   min-width: 120px;
   max-width: 200px;
-  background: #111;
-  color: #fff;
+  background: var(--bg-dark);
+  color: var(--text-primary);
   text-align: center;
-  border: 1px solid var(--sunlight-gold);
+  border: 1px solid var(--accent-medium);
   border-radius: 8px;
   padding: 8px 12px;
   position: absolute;
@@ -155,38 +265,6 @@
   pointer-events: none;
   transition: opacity 0.15s, transform 0.15s;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.tooltip-container:hover .sidebar-tooltip {
-  visibility: visible;
-  opacity: 1;
-  transform: translateX(-50%) translateY(-2px);
-}
-
-
-.play-again-btn {
-  padding: 0.75rem 2rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  background-color: var(--sunlight-gold);
-  color: #2d1b4e;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  animation: buttonFadeIn 0.5s ease-out;
-}
-
-.play-again-btn:hover {
-  background-color: #ffd700;
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px -2px rgba(255, 215, 0, 0.3);
-}
-
-.play-again-btn:active {
-  background-color: #e6c200;
 }
 
 @keyframes fadeIn {
@@ -220,63 +298,5 @@
   to {
     transform: scale(1);
     opacity: 1;
-  }
-}
-
-/* Mobile Responsive Modal Styles */
-@media (max-width: 768px) {
-  .game-over-content {
-    padding: 1.5rem 2.5rem;
-    max-width: 90vw;
-  }
-
-  .game-over-title {
-    font-size: 2.5rem;
-  }
-
-  .game-over-message {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .play-again-btn {
-    padding: 0.65rem 1.75rem;
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .game-over-content {
-    padding: 1.25rem 2rem;
-    max-width: 85vw;
-    border-radius: 12px;
-  }
-
-  .game-over-title {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .game-over-message {
-    font-size: 0.9rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .play-again-btn {
-    padding: 0.6rem 1.5rem;
-    font-size: 1rem;
-    min-height: 44px;
-  }
-}
-
-/* Touch-friendly button */
-@media (hover: none) and (pointer: coarse) {
-  .play-again-btn {
-    min-height: 48px;
-    min-width: 120px;
-  }
-
-  .play-again-btn:active {
-    transform: scale(0.95);
   }
 }

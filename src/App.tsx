@@ -1,11 +1,12 @@
 import './App.css';
 import { Board } from './components/Board';
 import { Sidebar } from './components/Sidebar';
-import {SplashScreen} from './components/SplashScreen/SplashScreen';
+import { SplashScreen } from './components/SplashScreen/SplashScreen';
 import { GamePlayInstructions } from './components/GamePlayInstructions';
 import { useGameState } from './hooks/useGameState';
 import { useSettings } from './hooks/useSettings';
 import { BOARD_COLOR_SCHEMES } from './utils/colorThemes';
+import { getContrastingHighlightColor } from './utils/contrastUtils';
 import { useEffect, useState } from 'react';
 import { usePiNetwork } from './hooks/usePiNetwork';
 import logo from './assets/icon-192x192.png';
@@ -18,7 +19,7 @@ function App() {
   // To use: add ?previewAuth=checking or ?previewAuth=failed to your local URL
   // 'checking' shows the loading/auth screen, 'failed' shows the error/failure screen
   //  
- //  http://localhost:5174/?previewAuth=failed 
+  //  http://localhost:5174/?previewAuth=failed 
 
 
   const previewAuth = (() => {
@@ -90,26 +91,37 @@ function App() {
     const colors = BOARD_COLOR_SCHEMES[settings.boardColors];
     document.documentElement.style.setProperty('--board-light', colors.light);
     document.documentElement.style.setProperty('--board-dark', colors.dark);
+    // Set dynamic jump highlight color based on contrast with dark squares
+    const highlightColor = getContrastingHighlightColor(colors.dark);
+    document.documentElement.style.setProperty('--jump-highlight-color', highlightColor);
   }, [settings.boardColors]);
 
 
   // DEV-ONLY: Preview authentication screens for styling
   if (previewAuth === 'checking') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', color:'white' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100svh', color: 'white' }}>
         <img src={logo} alt="Checkers4Pi" style={{ width: 96, height: 96, marginBottom: 24 }} />
-        <div>Checking Pi Network authentication...</div>
+        <div>Connecting to Pi Ecosystem...</div>
       </div>
     );
   }
   if (previewAuth === 'failed') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100svh' }}>
         <img src={logo} alt="Checkers4Pi" style={{ width: 96, height: 96, marginBottom: 24 }} />
-        <div style={{ color: 'red', marginBottom: 12 }}>Authentication failed.</div>
-        <div style={{ maxWidth: 320, textAlign: 'center' , color:'white'}}>
+        <div style={{ color: '#c28ded', outline: '1px solid white', marginBottom: 12, padding: '5px 10px' }}>Authentication failed.</div>
+        <div style={{ maxWidth: 320, textAlign: 'center', color: 'white' }}>
           This app requires the Pi Network SDK.<br />
           Please open in the Pi Browser or use the Pi Developer Portal sandbox for full functionality.
+        </div>
+        <div className="retry">
+          <button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}
+          >
+            Retry Connection
+          </button>
         </div>
       </div>
     );
@@ -118,22 +130,29 @@ function App() {
   // Show authentication/fallback message if not authenticated
   if (!authChecked) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100svh' }}>
         <img src={logo} alt="Checkers4Pi" style={{ width: 96, height: 96, marginBottom: 24 }} />
-        <div>Checking Pi Network authentication...</div>
+        <div>Connecting to Pi Ecosystem......</div>
       </div>
     );
   }
 
+  // Current production error block (bottom of file)
   if (authError) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100svh' }}>
         <img src={logo} alt="Checkers4Pi" style={{ width: 96, height: 96, marginBottom: 24 }} />
-        <div style={{ color: 'red', marginBottom: 12 }}>{authError}</div>
-        <div style={{ maxWidth: 320, textAlign: 'center' }}>
+        {/* Updated to match your refined failure screen */}
+        <div style={{ color: '#c28ded', outline: '1px solid white', marginBottom: 12, padding: '5px 10px' }}>
+          {authError}
+        </div>
+        <div style={{ maxWidth: 320, textAlign: 'center', color: 'white' }}>
           This app requires the Pi Network SDK.<br />
           Please open in the Pi Browser or use the Pi Developer Portal sandbox for full functionality.
         </div>
+        <button onClick={() => window.location.reload()} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '8px' }}>
+          Retry Connection ?
+        </button>
       </div>
     );
   }
@@ -149,6 +168,15 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Landscape Warning Overlay */}
+      <div className="landscape-warning">
+        <div className="warning-content">
+          <img src={logo} alt="Checkers4Pi Logo" className="rotate-icon-img" />
+          <h2>Please Rotate Your Device</h2>
+          <p>Checkers4Pi is designed for Portrait Mode.</p>
+        </div>
+      </div>
+
       <div className="game-layout">
         <div className="main-content">
           <Board
@@ -172,7 +200,7 @@ function App() {
           settings={settings}
           onSettingsChange={updateSettings}
           showPlayAgain={showPlayAgain}
-          onPlayAgain={handleRestart}
+
           onRestart={handleRestart}
           moveHistory={gameState.moveHistory}
           canUndo={gameState.aiLevel === 'beginner' && gameState.moveHistory.length >= 2 && !gameState.isAiTurn && !gameState.winner}
