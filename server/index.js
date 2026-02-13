@@ -19,7 +19,7 @@ app.use('/api/payments', paymentsRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
+  res.json({
     status: 'ok',
     environment: config.NODE_ENV,
     piConfigured: !!config.PI_API_KEY,
@@ -30,7 +30,7 @@ app.get('/api/health', (req, res) => {
 if (config.isProduction) {
   const distPath = path.join(__dirname, '../dist');
   app.use(express.static(distPath));
-  
+
   // Serve index.html for all non-API routes (SPA routing)
   app.get('*', (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
@@ -68,7 +68,7 @@ app.listen(PORT, () => {
   console.log(`\n🚀 Checkers4Pi Server running on port ${PORT}`);
   console.log(`   Environment: ${config.NODE_ENV}`);
   console.log(`   Pi API configured: ${!!config.PI_API_KEY ? '✅' : '❌'}`);
-  
+
   if (config.isDevelopment) {
     console.log(`\n   API: http://localhost:${PORT}/api`);
     console.log(`   Frontend (Vite): Run "npm run dev" in another terminal\n`);
@@ -76,3 +76,4 @@ app.listen(PORT, () => {
     console.log(`\n   App: http://localhost:${PORT}\n`);
   }
 });
+export default app;
