@@ -16,8 +16,16 @@ export const usePiNetwork = () => {
   // Initialize Pi SDK instance
   const pi = useMemo(() => {
     try {
-      return new PiNetworkClient(true); // sandbox mode
-    } catch {
+      // MANDATORY: Manually trigger the global Pi init for the Sandbox/Portal handshake
+      if (typeof window !== 'undefined' && (window as any).Pi) {
+        (window as any).Pi.init({ version: "2.0", sandbox: true });
+        console.log("Pi SDK Global Init: Success (Sandbox Mode)");
+      }
+
+      // Return the client wrapper
+      return new PiNetworkClient(true);
+    } catch (error) {
+      console.error("Pi SDK Init Error:", error);
       return null;
     }
   }, []);
@@ -27,7 +35,8 @@ export const usePiNetwork = () => {
     if (!pi) return;
 
     pi.initialize().then((result) => {
-      if (result.success && pi.getUser()) {
+      // Check if result exists and is successful
+      if (result && result.success) {
         const currentUser = pi.getUser();
         if (currentUser) {
           setIsAuthenticated(true);
@@ -37,8 +46,8 @@ export const usePiNetwork = () => {
           });
         }
       }
-    }).catch(() => {
-      // Silent catch
+    }).catch((err) => {
+      console.warn('Pi Initialization silent catch:', err);
     });
   }, [pi]);
 
@@ -46,12 +55,11 @@ export const usePiNetwork = () => {
     if (!pi) return;
 
     try {
-      // SDK authenticate signature: (scopes, onIncompletePaymentFound)
       const result = await pi.authenticate(['username', 'payments'], (payment) => {
         console.log('Incomplete payment found:', payment);
       });
 
-      if (result.success && result.data) {
+      if (result && result.success && result.data) {
         setIsAuthenticated(true);
         setUser({
           uid: result.data.uid,
