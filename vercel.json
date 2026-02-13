@@ -11,14 +11,18 @@
         },
         {
           "key": "Cache-Control",
-          "value": "no-store, max-age=0"
+          "value": "no-store, must-revalidate"
         }
       ]
     }
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/validation-key.txt",
+      "destination": "/validation-key.txt"
+    },
+    {
+      "source": "/((?!validation-key\\.txt).*)",
       "destination": "/index.html"
     }
   ]
