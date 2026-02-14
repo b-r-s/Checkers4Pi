@@ -1,21 +1,6 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "headers": [
-    {
-      "source": "/validation-key.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store, must-revalidate"
-        }
-      ]
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
